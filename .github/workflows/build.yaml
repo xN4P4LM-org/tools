@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup Rust
-      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y --profile=minimal --default-toolchain=stable --target=x86_64-unknown-linux-gnu
+      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal --default-toolchain=stable --target=x86_64-unknown-linux-gnu
 
     - name: Build using cargo
       run: cargo build --release
@@ -28,7 +28,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup Rust
-      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y --profile=minimal --default-toolchain=stable --target=aarch64-apple-darwin
+      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal --default-toolchain=stable --target=x86_64-unknown-linux-gnu
 
     - name: Build using cargo
       run: cargo build --release
