@@ -1,20 +1,34 @@
 use semver::{BuildMetadata, Prerelease, Version};
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, error::Error};
+use std::error::Error;
 
 /// This struct represents the structure of the project and
 /// is used to serialize and deserialize the project definition file.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Project {
-    pub name: String,
-    pub domain: String,
-    pub version: String,
-    pub services: HashMap<String, Service>,
+    pub name: String, // required - This is the name of the project and will be used to name the repository
+    pub domain: String, // required - This is the domain of the project and can optionally be appended to the name of the project
+    pub version: String, // required - This is the version of the project
+    pub description: String, // required - This is the description of the project that serves as the description of the repository
+    pub languages: Option<Vec<String>>, // optional - This is a list of programming languages used in the service
+    pub frameworks: Option<Vec<String>>, // optional - This is the framework the service is developed
+    pub services: Option<Vec<Box<Project>>>, // required for parent projects, or hierarchical projects - This is the list of services/children in the project
+    pub repo: Option<Vec<Repository>>, // optional - This is the configuration for the repository
+    pub parent: Option<Box<Project>>, // required for hierarchical projects - This is the parent project of the microservice
+    pub from_template: Option<bool>, // optional - This indicates if the repository was created from a templates
+    pub template: Option<String>, // optional - This is the name of the source template repository
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Service {
-    pub name: String,
+pub struct Repository {
+    pub name: String,                // required - This is the name of the repository
+    pub description: String,         // required - This is the description of the repository
+    pub provider: Option<String>, // optional - This is the name of the provider of the repository
+    pub is_private: Option<bool>, // optional - This indicates if the repository is private
+    pub web_url: Option<String>,  // optional - This is the web URL of the repository
+    pub git_url: Option<String>,  // optional - This is the git URL of the repository
+    pub from_template: Option<bool>, // optional - This indicates if the repository was created from a template
+    pub template: Option<String>, // optional - This is the name of the source template repository
 }
 
 impl Project {
