@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+    
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Rust
+      run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal --default-toolchain=stable --target=x86_64-unknown-linux-gnu
+
+    - name: Build using cargo
+      run: cargo test --no-fail-fast --all-targets --all-features --release

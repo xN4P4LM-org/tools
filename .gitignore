@@ -18,3 +18,5 @@ config.yaml
 
 # self-testing folder
 testing/
+
+.gitmodules

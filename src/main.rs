@@ -6,7 +6,7 @@ mod controller;
 mod helpers;
 mod models;
 
-pub static CONFIG: Lazy<AppConfigFile> = Lazy::new(|| config::yaml::get_config());
+pub static CONFIG: Lazy<AppConfigFile> = Lazy::new(|| config::app_config::get_config());
 
 /// ## main()
 /// This function is the entry point for the program

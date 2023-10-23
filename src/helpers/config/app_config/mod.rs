@@ -1,4 +1,8 @@
-use crate::models::app_config::{AppConfigFile, Version};
+use semver::{Prerelease, Version};
+
+use crate::helpers::filesystem::path::append_path;
+use crate::models::app_config::AppConfigFile;
+use std::env::current_dir;
 use std::{fs::File, io::Write, path::Path};
 
 /// Retrieves the application configuration, either by reading it from a YAML file
@@ -17,22 +21,30 @@ pub fn get_config() -> AppConfigFile {
     let config_file = "config.yaml";
 
     // get current directory path
-    let current_dir = std::env::current_dir().expect("Couldn't get current directory");
+    let current_dir = current_dir().expect("Couldn't get current directory");
 
     // get the path to the configuration file
-    let config_path = crate::helpers::filesystem::path::append_path(&current_dir, config_file);
+    let config_path = append_path(&current_dir, config_file);
 
     // Check if the configuration file already exists
     if !config_path.exists() {
         // If the file does not exist, create a default configuration
-        let version = Version::init(0, 1, 0);
-        let config = AppConfigFile::init(
-            current_dir.to_str().unwrap().to_string(),
-            "docker-compose.yaml".to_string(),
-            ".gitmodules".to_string(),
-            "project".to_string(),
-            version,
-        );
+        let version = Version {
+            major: 0,
+            minor: 1,
+            patch: 0,
+            pre: Prerelease::new("alpha").unwrap(),
+            build: semver::BuildMetadata::EMPTY,
+        }
+        .to_string();
+        let config = AppConfigFile {
+            project_path: current_dir.to_str().unwrap().to_string(),
+            docker_compose: "docker-compose.yaml".to_string(),
+            gitmodules: ".gitmodules".to_string(),
+            project_name: "project".to_string(),
+            project_version: version,
+            github_api_token: None,
+        };
 
         // Write the default configuration to a YAML file
         write_config(&config);
@@ -41,20 +53,19 @@ pub fn get_config() -> AppConfigFile {
         config
     } else {
         // If the file exists, read the configuration from the file
-        let read_config = std::fs::read_to_string(config_path).expect("Couldn't read config file");
+        let raw_config_file =
+            std::fs::read_to_string(config_path).expect("Couldn't read config file");
 
-        // Deserialize the YAML data to an `AppConfigFile` instance
-        let mut config_file: AppConfigFile =
-            serde_yaml::from_str(&read_config).expect("Couldn't deserialize config file");
+        // Deserialize the configuration from YAML
+        let config_file = AppConfigFile::from_yaml(&raw_config_file);
 
-        if config_file.project_path == "." {
-            // If the project path in the configuration file is a . (dot), update it
-            // to the current directory in the configuration file
-            config_file.project_path = current_dir.to_str().unwrap().to_string();
+        match config_file {
+            Ok(config) => config,
+            Err(e) => {
+                println!("Couldn't deserialize config file: {}", e);
+                std::process::exit(1);
+            }
         }
-
-        // Return the configuration
-        config_file
     }
 }
 
@@ -69,7 +80,7 @@ pub fn get_config() -> AppConfigFile {
 /// - If the YAML data cannot be written to the file.
 pub fn write_config(config: &AppConfigFile) {
     // Serialize the configuration to a YAML string
-    let config_yaml = serde_yaml::to_string(config).expect("Couldn't serialize config to YAML");
+    let config_yaml = config.to_yaml().expect("Couldn't serialize config to YAML");
 
     // Create the YAML file
     let mut file = File::create(Path::new("config.yaml")).expect("Couldn't create file");

@@ -1,25 +1,28 @@
 use semver::{BuildMetadata, Prerelease, Version};
 use serde::{Deserialize, Serialize};
-use std::error::Error;
+use std::{collections::HashMap, error::Error};
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct AppConfigFile {
-    pub project_path: String,
-    pub docker_compose: String,
-    pub gitmodules: String,
-    pub project_name: String,
-    pub project_version: String,
-    pub github_api_token: Option<String>,
+/// This struct represents the structure of the project and
+/// is used to serialize and deserialize the project definition file.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Project {
+    pub name: String,
+    pub domain: String,
+    pub version: String,
+    pub services: HashMap<String, Service>,
 }
 
-impl AppConfigFile {
-    /// This function returns the application configuration from yaml formated text string.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Service {
+    pub name: String,
+}
+
+impl Project {
     pub fn from_yaml(yaml: &str) -> Result<Self, Box<dyn Error>> {
-        let app_config_file: AppConfigFile = serde_yaml::from_str(yaml)?;
-        Ok(app_config_file)
+        let project: Project = serde_yaml::from_str(yaml)?;
+        Ok(project)
     }
 
-    /// This function returns the application configuration as a yaml formated text string.
     pub fn to_yaml(&self) -> Result<String, Box<dyn Error>> {
         let mut yaml = serde_yaml::to_string(self)?;
         yaml.insert_str(0, "---\n");
@@ -28,7 +31,7 @@ impl AppConfigFile {
 
     /// This function updates the project version.
     pub fn update_version(&mut self, version: &Version) {
-        self.project_version = version.to_string();
+        self.version = version.to_string();
     }
 
     /// This function updates the major version of the project version.
@@ -69,37 +72,6 @@ impl AppConfigFile {
     /// This function returns the project version as a semver::Version
     /// struct.
     pub fn get_version(&self) -> Version {
-        Version::parse(&self.project_version).unwrap()
+        Version::parse(&self.version).unwrap()
     }
-}
-
-#[test]
-fn test_app_config() {
-    let config = AppConfigFile {
-        project_path: ".".to_string(),
-        docker_compose: "docker-compose.yaml".to_string(),
-        gitmodules: ".gitmodules".to_string(),
-        project_name: "project".to_string(),
-        project_version: Version {
-            major: 0,
-            minor: 1,
-            patch: 0,
-            pre: Prerelease::EMPTY,
-            build: BuildMetadata::EMPTY,
-        }
-        .to_string(),
-        github_api_token: None,
-    };
-
-    let config_yaml = r#"---
-project_path: .
-docker_compose: docker-compose.yaml
-gitmodules: .gitmodules
-project_name: project
-project_version: 0.1.0
-github_api_token: null
-"#;
-
-    assert_eq!(config, AppConfigFile::from_yaml(config_yaml).unwrap());
-    assert_eq!(config_yaml, config.to_yaml().unwrap());
 }

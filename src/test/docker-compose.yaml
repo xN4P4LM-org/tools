@@ -1,0 +1,54 @@
+---
+services:
+    web:
+        build:
+        context: ./web
+        dockerfile: Dockerfile
+        image: web:latest
+        ports:
+        - 8080:8080
+        networks:
+        - web
+        configs:
+        - web_config
+        secrets:
+        - web_secret
+        volumes:
+        - web_volume
+        depends_on:
+        - db
+    db:
+        build:
+        context: ./db
+        dockerfile: Dockerfile
+        image: db:latest
+        ports:
+        - 5432:5432
+        networks:
+        - db
+        configs:
+        - db_config
+        secrets:
+        - db_secret
+        volumes:
+        - db_volume
+networks:
+    web:
+        driver: bridge
+    db:
+        driver: bridge
+configs:
+    web_config:
+        external: true
+    db_config:
+        external: true
+secrets:
+    web_secret:
+        external: true
+    db_secret:
+        external: true
+volumes:
+    web_volume:
+        driver: local
+    db_volume:
+        driver: local

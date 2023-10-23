@@ -1,3 +1,1 @@
-pub mod generic;
-pub mod json;
-pub mod yaml;
+pub mod app_config;

@@ -12,3 +12,12 @@ pub fn router(args: &[String]) {
         }
     }
 }
+
+// ### help_not_implemented_yet()
+// This function prints a message that the help command is not implemented yet
+//
+// ### Returns
+// This function does not return anything
+pub fn help_not_implemented_yet() {
+    println!("Help is not implemented yet");
+}

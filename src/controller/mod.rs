@@ -1,7 +1,8 @@
 use crate::helpers;
-
+use crate::CONFIG;
 mod down;
 mod init;
+mod new;
 mod up;
 mod watch;
 
@@ -10,11 +11,11 @@ mod watch;
 /// It takes a command and a list of arguments and runs the
 /// appropriate function.
 ///
-/// ## Arguments
+/// ### Arguments
 /// - command: String - The command to run
 /// - args: &[String] - A list of arguments to pass to the command
 ///
-/// ## Returns
+/// ### Returns
 /// This function does not return anything
 pub fn run(command: String, args: &[String]) {
     match command.as_str() {
@@ -25,10 +26,38 @@ pub fn run(command: String, args: &[String]) {
         "status" => status(args),
         "-v" | "--version" => {
             // print the version number of the program
-            print!("{}\n", env!("CARGO_PKG_VERSION"));
+            print!("Tools Version: {}\n", env!("CARGO_PKG_VERSION"));
+            print!("Project Version: {}\n", CONFIG.get_version());
         }
         _ => {
             helpers::help::main_help::print_help();
+        }
+    }
+}
+
+// Controller actions
+
+/// ## down()
+/// This function stops the project using `docker compose down`
+/// to stop the project.
+///
+/// ### Arguments
+/// - args: &[String] - A list of arguments to pass to the command
+///
+/// ### Returns
+/// This function does not return anything
+pub fn down(args: &[String]) {
+    println!("Not implemented up yet");
+    match args.get(0) {
+        Some(arg0) => match arg0.as_str() {
+            // print the help message for the new command
+            "help" | "-h" | "--help" => helpers::help::help_not_implemented_yet(),
+            // if the argument is not recognized, print the help message for the new command
+            _ => helpers::help::help_not_implemented_yet(),
+        },
+        None => {
+            // if no arguments are passed, print the help message for the new command
+            helpers::help::help_not_implemented_yet();
         }
     }
 }
@@ -38,21 +67,51 @@ pub fn run(command: String, args: &[String]) {
 /// files and directories for the project. It also bootstraps the
 /// project configs and secrets from the template files.
 ///
-/// ## Arguments
+/// ### Arguments
 /// - args: &[String] - A list of arguments to pass to the command
 ///
-/// ## Returns
+/// ### Returns
 /// This function does not return anything
 pub fn init(args: &[String]) {
     match args.get(0) {
         Some(arg0) => match arg0.as_str() {
-            "rebuild" => init::rebuild_full(),
-            "new" => init::init_new(),
+            // rebuild_full performs a clean and then a init to rebuild the project
+            // from scratch, it takes an argument to confirm the rebuild
+            "rebuild" => init::rebuild_full(&args[1..]),
+            // clean takes arguments to confirm the deletion
+            "clean" => init::clean(&args[1..]),
+            // print the help message for the init command
             "help" | "-h" | "--help" => helpers::help::init_help::print_help(),
-            _ => init::init(),
+            // if the argument is not recognized, print the help message for the init command
+            _ => helpers::help::init_help::print_help(),
         },
         None => {
+            // if no arguments are passed, run the init command with no arguments
             init::init();
+        }
+    }
+}
+
+// ## new()
+// This function creates a new submodule for the project
+//
+// ### Arguments
+// - args: &[String] - A list of arguments to pass to the command
+//
+// ### Returns
+// This function does not return anything
+pub fn new(args: &[String]) {
+    println!("Not implemented up yet");
+    match args.get(0) {
+        Some(arg0) => match arg0.as_str() {
+            // print the help message for the new command
+            "help" | "-h" | "--help" => helpers::help::help_not_implemented_yet(),
+            // if the argument is not recognized, print the help message for the new command
+            _ => helpers::help::help_not_implemented_yet(),
+        },
+        None => {
+            // if no arguments are passed, print the help message for the new command
+            helpers::help::help_not_implemented_yet();
         }
     }
 }
@@ -61,30 +120,25 @@ pub fn init(args: &[String]) {
 /// This function starts the project using `docker compose up -d`
 /// to run the project in the background.
 ///
-/// ## Arguments
+/// ### Arguments
 /// - args: &[String] - A list of arguments to pass to the command
 ///
-/// ## Returns
+/// ### Returns
 /// This function does not return anything
 pub fn up(args: &[String]) {
     println!("Not implemented up yet");
-    // print the arguments
-    println!("{:?}", args);
-}
-
-/// ## down()
-/// This function stops the project using `docker compose down`
-/// to stop the project.
-///
-/// ## Arguments
-/// - args: &[String] - A list of arguments to pass to the command
-///
-/// ## Returns
-/// This function does not return anything
-pub fn down(args: &[String]) {
-    println!("Not implemented down yet");
-    // print the arguments
-    println!("{:?}", args);
+    match args.get(0) {
+        Some(arg0) => match arg0.as_str() {
+            // print the help message for the new command
+            "help" | "-h" | "--help" => helpers::help::help_not_implemented_yet(),
+            // if the argument is not recognized, print the help message for the new command
+            _ => helpers::help::help_not_implemented_yet(),
+        },
+        None => {
+            // if no arguments are passed, print the help message for the new command
+            helpers::help::help_not_implemented_yet();
+        }
+    }
 }
 
 /// ## watch()
@@ -92,27 +146,47 @@ pub fn down(args: &[String]) {
 /// the application code and restarts the project when changes are
 /// detected using `docker compose up -d` and `docker compose down`.
 ///
-/// ## Arguments
+/// ### Arguments
 /// - args: &[String] - A list of arguments to pass to the command
 ///
-/// ## Returns
+/// ### Returns
 /// This function does not return anything
 pub fn watch(args: &[String]) {
-    println!("Not implemented yet");
-    // print the arguments
-    println!("{:?}", args);
+    println!("Not implemented up yet");
+    match args.get(0) {
+        Some(arg0) => match arg0.as_str() {
+            // print the help message for the new command
+            "help" | "-h" | "--help" => helpers::help::help_not_implemented_yet(),
+            // if the argument is not recognized, print the help message for the new command
+            _ => helpers::help::help_not_implemented_yet(),
+        },
+        None => {
+            // if no arguments are passed, print the help message for the new command
+            helpers::help::help_not_implemented_yet();
+        }
+    }
 }
 
 // ## status()
 // This function prints the status of the project
 //
-// ## Arguments
+// ### Arguments
 // - args: &[String] - A list of arguments to pass to the command
 //
-// ## Returns
+// ### Returns
 // This function does not return anything
 pub fn status(args: &[String]) {
-    println!("Not implemented yet");
-    // print the arguments
-    println!("{:?}", args);
+    println!("Not implemented up yet");
+    match args.get(0) {
+        Some(arg0) => match arg0.as_str() {
+            // print the help message for the new command
+            "help" | "-h" | "--help" => helpers::help::help_not_implemented_yet(),
+            // if the argument is not recognized, print the help message for the new command
+            _ => helpers::help::help_not_implemented_yet(),
+        },
+        None => {
+            // if no arguments are passed, print the help message for the new command
+            helpers::help::help_not_implemented_yet();
+        }
+    }
 }
