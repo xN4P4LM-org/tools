@@ -1,6 +1,6 @@
 # <span style="color:red">*[WIP]- Use at your own risk* |</span> tools (Your modern Microservices Companion!) 
 
-[![Build](https://github.com/xN4P4LM-org/tools/actions/workflows/build.yaml/badge.svg)](https://github.com/xN4P4LM-org/tools/actions/workflows/build.yaml) | 
+[![Build](https://github.com/xN4P4LM-org/tools/actions/workflows/build.yaml/badge.svg)](https://github.com/xN4P4LM-org/tools/actions/workflows/build.yaml) | [![Test](https://github.com/xN4P4LM-org/tools/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/xN4P4LM-org/tools/actions/workflows/test.yaml)
 
 ------
 ## Overview
