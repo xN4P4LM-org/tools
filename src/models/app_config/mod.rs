@@ -1,6 +1,6 @@
 use semver::{BuildMetadata, Prerelease, Version};
 use serde::{Deserialize, Serialize};
-use std::error::Error;
+use std::{error::Error, fs};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct AppConfigFile {
@@ -102,4 +102,71 @@ github_api_token: null
 
     assert_eq!(config, AppConfigFile::from_yaml(config_yaml).unwrap());
     assert_eq!(config_yaml, config.to_yaml().unwrap());
+}
+
+#[test]
+fn test_app_config_update_version() {
+    let mut config = AppConfigFile {
+        project_path: ".".to_string(),
+        docker_compose: "docker-compose.yaml".to_string(),
+        gitmodules: ".gitmodules".to_string(),
+        project_name: "project".to_string(),
+        project_version: Version {
+            major: 0,
+            minor: 1,
+            patch: 0,
+            pre: Prerelease::EMPTY,
+            build: BuildMetadata::EMPTY,
+        }
+        .to_string(),
+        github_api_token: None,
+    };
+
+    let config_yaml = r#"---
+project_path: .
+docker_compose: docker-compose.yaml
+gitmodules: .gitmodules
+project_name: project
+project_version: 0.1.0
+github_api_token: null
+"#;
+
+    assert_eq!(config, AppConfigFile::from_yaml(config_yaml).unwrap());
+    assert_eq!(config_yaml, config.to_yaml().unwrap());
+
+    config.update_version(&Version::parse("0.2.0").unwrap());
+
+    let config_yaml = r#"---
+project_path: .
+docker_compose: docker-compose.yaml
+gitmodules: .gitmodules
+project_name: project
+project_version: 0.2.0
+github_api_token: null
+"#;
+
+    assert_eq!(config, AppConfigFile::from_yaml(config_yaml).unwrap());
+    assert_eq!(config_yaml, config.to_yaml().unwrap());
+}
+
+#[test]
+fn test_app_config_read_from_file() {
+    let config_yaml = r#"---
+project_path: . # relative to this file . indicates the same directory
+docker_compose: docker-compose.yaml
+gitmodules: .gitmodules
+project_name: tools
+project_version: 0.0.1
+github_token: gh_token # if you want to use github api instead of the GitHub CLI
+"#;
+
+    let config = AppConfigFile::from_yaml(config_yaml).unwrap();
+
+    let config_from_file = fs::read_to_string("src/test/models/app_config/config.yaml").unwrap();
+
+    let from_file = AppConfigFile::from_yaml(&config_from_file);
+    match from_file {
+        Ok(from_file) => assert_eq!(config, from_file),
+        Err(e) => assert!(false, "{}", e.to_string()),
+    }
 }

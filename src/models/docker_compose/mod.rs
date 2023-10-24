@@ -123,7 +123,7 @@ volumes:
 "#;
 
     //relative path from the project root
-    let path_to_test_docker_compose = "src/test/docker-compose.yaml";
+    let path_to_test_docker_compose = "src/test/models/docker_compose/docker-compose.yaml";
 
     // get directory where this program is running
     let current_dir = std::env::current_dir().unwrap();

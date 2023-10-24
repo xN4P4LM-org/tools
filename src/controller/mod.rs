@@ -3,6 +3,7 @@ use crate::CONFIG;
 mod down;
 mod init;
 mod new;
+mod setup;
 mod up;
 mod watch;
 

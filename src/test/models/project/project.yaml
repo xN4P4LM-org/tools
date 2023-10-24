@@ -1,0 +1,42 @@
+---
+name: test-project
+domain: test-domain.test
+version: 0.1.0
+description: This is a test project
+languages:
+    - rust
+    - javascript
+frameworks:
+    - actix
+    - react
+    - nextjs
+services:
+    - name: test-backend
+      domain: test-domain.test
+      version: 0.1.0
+      description: This is a test backend service
+      languages:
+          - rust
+      frameworks:
+          - actix
+      repo:
+          - name: test-service
+            description: This is a test service
+            provider: github
+            is_private: false
+            web_url: https://github.com/github
+    - name: test-frontend
+      domain: test-domain.test
+      version: 0.1.0
+      description: This is a test frontend service
+      languages:
+          - javascript
+      frameworks:
+          - react
+          - nextjs
+      repo:
+          - name: test-service
+            description: This is a test service
+            provider: github
+            is_private: false
+            web_url: https://github.com/github

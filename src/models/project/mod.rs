@@ -1,6 +1,6 @@
 use semver::{BuildMetadata, Prerelease, Version};
 use serde::{Deserialize, Serialize};
-use std::error::Error;
+use std::{error::Error, fs};
 
 /// This struct represents the structure of the project and
 /// is used to serialize and deserialize the project definition file.
@@ -13,14 +13,14 @@ pub struct Project {
     pub languages: Option<Vec<String>>, // optional - This is a list of programming languages used in the service
     pub frameworks: Option<Vec<String>>, // optional - This is the framework the service is developed
     pub services: Option<Vec<Box<Project>>>, // required for parent projects, or hierarchical projects - This is the list of services/children in the project
-    pub repo: Option<Vec<Repository>>, // optional - This is the configuration for the repository
+    pub repo: Option<Vec<ProjectRepository>>, // optional - This is the configuration for the repository
     pub parent: Option<Box<Project>>, // required for hierarchical projects - This is the parent project of the microservice
     pub from_template: Option<bool>, // optional - This indicates if the repository was created from a templates
     pub template: Option<String>, // optional - This is the name of the source template repository
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Repository {
+pub struct ProjectRepository {
     pub name: String,                // required - This is the name of the repository
     pub description: String,         // required - This is the description of the repository
     pub provider: Option<String>, // optional - This is the name of the provider of the repository
@@ -28,7 +28,7 @@ pub struct Repository {
     pub web_url: Option<String>,  // optional - This is the web URL of the repository
     pub git_url: Option<String>,  // optional - This is the git URL of the repository
     pub from_template: Option<bool>, // optional - This indicates if the repository was created from a template
-    pub template: Option<String>, // optional - This is the name of the source template repository
+    pub is_template: Option<String>, // optional - This is the name of the source template repository
 }
 
 impl Project {
@@ -87,5 +87,75 @@ impl Project {
     /// struct.
     pub fn get_version(&self) -> Version {
         Version::parse(&self.version).unwrap()
+    }
+}
+
+#[test]
+fn test_project() {
+    let project = r#"---
+name: test-project
+domain: test-domain.test
+version: 0.1.0
+description: This is a test project
+languages:
+    - rust
+    - javascript
+frameworks:
+    - actix
+    - react
+    - nextjs
+services:
+    - name: test-backend
+      domain: test-domain.test
+      version: 0.1.0
+      description: This is a test backend service
+      languages:
+          - rust
+      frameworks:
+          - actix
+      repo:
+          - name: test-service
+            description: This is a test service
+            provider: github
+            is_private: false
+            web_url: https://github.com/github
+    - name: test-frontend
+      domain: test-domain.test
+      version: 0.1.0
+      description: This is a test frontend service
+      languages:
+          - javascript
+      frameworks:
+          - react
+          - nextjs
+      repo:
+          - name: test-service
+            description: This is a test service
+            provider: github
+            is_private: false
+            web_url: https://github.com/github
+"#;
+
+    let project_from_yaml = Project::from_yaml(project);
+
+    match project_from_yaml {
+        Ok(_project) => {
+            assert!(true)
+        }
+        Err(error) => {
+            assert!(false, "Error: {}", error)
+        }
+    }
+}
+
+#[test]
+fn test_project_read_from_file() {
+    let project_from_file = fs::read_to_string("src/test/models/project/project.yaml").unwrap();
+
+    let from_file = Project::from_yaml(&project_from_file);
+
+    match from_file {
+        Ok(_project) => assert!(true),
+        Err(e) => assert!(false, "{}", e.to_string()),
     }
 }
