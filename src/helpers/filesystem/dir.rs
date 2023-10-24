@@ -11,10 +11,7 @@ use crate::CONFIG;
 #[allow(dead_code)]
 pub fn get_directories(path: Option<&str>) -> Vec<String> {
     let mut directories: Vec<String> = Vec::new();
-    let path = match path {
-        Some(path) => path,
-        None => ".",
-    };
+    let path = path.unwrap_or(".");
     let paths = std::fs::read_dir(path).unwrap();
     for path in paths {
         let path = path.unwrap().path();
@@ -38,7 +35,7 @@ pub fn get_directories(path: Option<&str>) -> Vec<String> {
 /// - bool - Whether or not the directory exists
 pub fn check_if_directory_exists(path: &str) -> bool {
     // check if path is from root, if not, prepend the project path
-    let path = if path.starts_with("/") {
+    let path = if path.starts_with('/') {
         path.to_string()
     } else {
         format!("{}/{}", CONFIG.project_path, path)
@@ -59,10 +56,7 @@ pub fn check_if_directory_exists(path: &str) -> bool {
 #[allow(dead_code)]
 pub fn create_directory(path: &str) -> bool {
     let path = std::path::Path::new(path);
-    match std::fs::create_dir(path) {
-        Ok(_) => true,
-        Err(_) => false,
-    }
+    std::fs::create_dir(path).is_ok()
 }
 
 /// # (THIS FUNCTION IS DANGEROUS AND SHOULD BE USED WITH *EXTREME* CAUTION)
@@ -77,10 +71,7 @@ pub fn create_directory(path: &str) -> bool {
 #[allow(dead_code)]
 pub fn recursively_delete_directory(path: &str) -> bool {
     let path = std::path::Path::new(path);
-    match std::fs::remove_dir_all(path) {
-        Ok(_) => true,
-        Err(_) => false,
-    }
+    std::fs::remove_dir_all(path).is_ok()
 }
 
 /// ## get_absolute_path(path: &str)
@@ -93,7 +84,7 @@ pub fn recursively_delete_directory(path: &str) -> bool {
 /// - String - The absolute path of the directory
 pub fn get_absolute_path(path: &str) -> String {
     // check if the path starts with root, and if not, prepend the project path
-    if path.starts_with("/") {
+    if path.starts_with('/') {
         path.to_string()
     } else {
         format!("{}/{}", CONFIG.project_path, path)
