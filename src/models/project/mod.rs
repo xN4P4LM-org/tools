@@ -12,7 +12,7 @@ pub struct Project {
     pub description: String, // required - This is the description of the project that serves as the description of the repository
     pub languages: Option<Vec<String>>, // optional - This is a list of programming languages used in the service
     pub frameworks: Option<Vec<String>>, // optional - This is the framework the service is developed
-    pub services: Option<Vec<Box<Project>>>, // required for parent projects, or hierarchical projects - This is the list of services/children in the project
+    pub services: Option<Vec<Project>>, // required for parent projects, or hierarchical projects - This is the list of services/children in the project
     pub repo: Option<Vec<ProjectRepository>>, // optional - This is the configuration for the repository
     pub parent: Option<Box<Project>>, // required for hierarchical projects - This is the parent project of the microservice
     pub from_template: Option<bool>, // optional - This indicates if the repository was created from a templates

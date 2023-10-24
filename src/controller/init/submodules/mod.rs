@@ -28,7 +28,7 @@ pub fn get_submodule_paths() -> Vec<(String, String, bool)> {
         .collect::<Vec<String>>();
 
     // return the submodule paths
-    return map_dirs(sub_module_paths);
+    map_dirs(sub_module_paths)
 }
 
 // check_if_submodule_init_run_needed(sub_module_paths: Vec<(String, String, bool)>)

@@ -93,14 +93,11 @@ pub fn recursively_delete_directory(path: &str) -> bool {
 /// - String - The absolute path of the directory
 pub fn get_absolute_path(path: &str) -> String {
     // check if the path starts with root, and if not, prepend the project path
-    let path = if path.starts_with("/") {
+    if path.starts_with("/") {
         path.to_string()
     } else {
         format!("{}/{}", CONFIG.project_path, path)
-    };
-
-    // return the absolute path without checking if it exists
-    path
+    }
 }
 
 /// ## map_dirs(list_dirs: Vec<String>) -> Vec<(String, String, bool)>

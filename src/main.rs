@@ -6,19 +6,18 @@ mod controller;
 mod helpers;
 mod models;
 
-pub static CONFIG: Lazy<AppConfigFile> = Lazy::new(|| config::app_config::get_config());
+pub static CONFIG: Lazy<AppConfigFile> = Lazy::new(config::app_config::get_config);
 
 /// ## main()
 /// This function is the entry point for the program
 fn main() {
     // if the config project path is not the current directory,
     // warn the user that this may cause unexpected behavior
-    if CONFIG.project_path
-        != std::env::current_dir()
+    if *CONFIG.project_path
+        != *std::env::current_dir()
             .expect("Couldn't get current directory")
             .to_str()
             .unwrap()
-            .to_string()
     {
         println!("WARNING: The project path in the configuration file is not the current directory. This may cause unexpected behavior.");
     }
