@@ -1,0 +1,7 @@
+---
+project_path: . # relative to this file . indicates the same directory
+docker_compose: docker-compose.yaml
+gitmodules: .gitmodules
+project_name: tools
+project_version: 0.0.1
+github_token: gh_token # if you want to use github api instead of the GitHub CLI
