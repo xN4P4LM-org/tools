@@ -13,8 +13,7 @@ fn get_path_to_docker_compose() -> PathBuf {
     let raw_project_path = &CONFIG.project_path;
     let project_path = PathBuf::from(raw_project_path);
     let docker_compose_filename = &CONFIG.docker_compose;
-    let docker_compose_path = append_path(&project_path, docker_compose_filename);
-    docker_compose_path
+    append_path(&project_path, docker_compose_filename)
 }
 
 /// ## get_docker_compose_file() -> DockerCompose

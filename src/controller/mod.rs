@@ -27,8 +27,8 @@ pub fn run(command: String, args: &[String]) {
         "status" => status(args),
         "-v" | "--version" => {
             // print the version number of the program
-            print!("Tools Version: {}\n", env!("CARGO_PKG_VERSION"));
-            print!("Project Version: {}\n", CONFIG.get_version());
+            println!("Tools Version: {}", env!("CARGO_PKG_VERSION"));
+            println!("Project Version: {}", CONFIG.get_version());
         }
         _ => {
             helpers::help::main_help::print_help();
