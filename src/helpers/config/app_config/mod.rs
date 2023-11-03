@@ -29,27 +29,12 @@ pub fn get_config() -> AppConfigFile {
     // Check if the configuration file already exists
     if !config_path.exists() {
         // If the file does not exist, create a default configuration
-        let version = Version {
-            major: 0,
-            minor: 1,
-            patch: 0,
-            pre: Prerelease::new("alpha").unwrap(),
-            build: semver::BuildMetadata::EMPTY,
-        }
-        .to_string();
-        let config = AppConfigFile {
-            project_path: current_dir.to_str().unwrap().to_string(),
-            docker_compose: "docker-compose.yaml".to_string(),
-            gitmodules: ".gitmodules".to_string(),
-            project_name: "project".to_string(),
-            project_version: version,
-            github_api_token: None,
-        };
+        let config = AppConfigFile::default();
 
-        // Write the default configuration to a YAML file
+        // Write the configuration to a YAML file
         write_config(&config);
 
-        // Return the default configuration
+        // Return the configuration
         config
     } else {
         // If the file exists, read the configuration from the file
@@ -88,4 +73,61 @@ pub fn write_config(config: &AppConfigFile) {
     // Write the YAML string to the file
     file.write_all(config_yaml.as_bytes())
         .expect("Couldn't write config to file");
+}
+
+/// Create a default configuration file.
+///
+/// ## Arguments
+/// - `config_file: &str`: The path to the configuration file.
+///
+/// ## Returns
+/// - `AppConfigFile`: The default configuration.
+pub fn create_config(config_file: &str) -> AppConfigFile {
+    // get current directory path
+    let current_dir = current_dir().expect("Couldn't get current directory");
+
+    // get the path to the configuration file
+    let config_path = append_path(&current_dir, config_file);
+
+    // If the file does not exist, create a default configuration
+    let version = Version {
+        major: 0,
+        minor: 1,
+        patch: 0,
+        pre: Prerelease::new("alpha").unwrap(),
+        build: semver::BuildMetadata::EMPTY,
+    }
+    .to_string();
+    let config = AppConfigFile {
+        project_path: current_dir.to_str().unwrap().to_string(),
+        docker_compose: "docker-compose.yaml".to_string(),
+        project_name: "project".to_string(),
+        project_version: version,
+        github_api_token: None,
+    };
+
+    // Write the default configuration to a YAML file
+    write_config(&config);
+
+    // Return the default configuration
+    config
+}
+
+/// Check if the configuration file exists.
+///
+/// ## Returns
+/// - `bool`: `true` if the configuration file exists, `false` otherwise.
+pub fn check_if_config_exists() -> bool {
+    // get current directory path
+    let current_dir = current_dir().expect("Couldn't get current directory");
+
+    // get the path to the configuration file
+    let config_path = append_path(&current_dir, "config.yaml");
+
+    // Check if the configuration file already exists
+    if !config_path.exists() {
+        false
+    } else {
+        true
+    }
 }

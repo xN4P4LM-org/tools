@@ -13,7 +13,12 @@ use crate::CONFIG;
 pub fn get_submodule_paths() -> Vec<(String, String, bool)> {
     // read the config file and get the .gitmodules file path and root path
     let base_path = CONFIG.project_path.clone();
-    let submodule_path = CONFIG.gitmodules.clone();
+    // try to get the path to .gitmodule file in the current directory
+    let submodule_path = std::fs::canonicalize(format!("{}/{}", base_path, ".gitmodules"))
+        .expect("Couldn't get path to .gitmodules file")
+        .to_str()
+        .unwrap()
+        .to_string();
 
     // read the .gitmodules file and get the paths of the submodules
     // example .gitmodules file:

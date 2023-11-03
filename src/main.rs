@@ -11,29 +11,19 @@ pub static CONFIG: Lazy<AppConfigFile> = Lazy::new(config::app_config::get_confi
 /// ## main()
 /// This function is the entry point for the program
 fn main() {
-    // if the config project path is not the current directory,
-    // warn the user that this may cause unexpected behavior
-    if *CONFIG.project_path
-        != *std::env::current_dir()
-            .expect("Couldn't get current directory")
-            .to_str()
-            .unwrap()
-    {
-        println!("WARNING: The project path in the configuration file is not the current directory. This may cause unexpected behavior.");
-    }
 
-    // switch statement based on the first argument and pass the rest of the arguments to the controller
-    match std::env::args().nth(1) {
-        Some(command) => {
-            let args: Vec<String> = std::env::args().collect();
-            if args.get(1).unwrap() == "help" {
-                helpers::help::router(&args[2..]);
-                return;
-            }
-            controller::run(command, &args[2..]);
-        }
-        None => {
-            helpers::help::main_help::print_help();
-        }
-    }
+    // // switch statement based on the first argument and pass the rest of the arguments to the controller
+    // match std::env::args().nth(1) {
+    //     Some(command) => {
+    //         let args: Vec<String> = std::env::args().collect();
+    //         if args.get(1).unwrap() == "help" {
+    //             helpers::help::router(&args[2..]);
+    //             return;
+    //         }
+    //         controller::run(command, &args[2..]);
+    //     }
+    //     None => {
+    //         helpers::help::main_help::print_help();
+    //     }
+    // }
 }
