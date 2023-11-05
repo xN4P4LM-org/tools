@@ -123,14 +123,13 @@ volumes:
 "#;
 
     //relative path from the project root
-    let path_to_test_docker_compose = "src/test/models/docker_compose/docker-compose.yaml";
+    let path_to_test_docker_compose = "src/tests/models/docker_compose/docker-compose.yaml";
 
     // get directory where this program is running
     let current_dir = std::env::current_dir().unwrap();
 
     // get absolute path to path_to_test_docker_compose
-    let absolue_path =
-        crate::helpers::filesystem::path::append_path(&current_dir, path_to_test_docker_compose);
+    let absolue_path = std::path::Path::new(&current_dir).join(path_to_test_docker_compose);
 
     println!("absolue_path: {:?}", absolue_path);
 

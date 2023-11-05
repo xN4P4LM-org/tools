@@ -1,6 +1,6 @@
 use semver::{BuildMetadata, Prerelease, Version};
 use serde::{Deserialize, Serialize};
-use std::{error::Error, fs};
+use std::error::Error;
 
 /// This struct represents the structure of the project and
 /// is used to serialize and deserialize the project definition file.
@@ -150,7 +150,8 @@ services:
 
 #[test]
 fn test_project_read_from_file() {
-    let project_from_file = fs::read_to_string("src/test/models/project/project.yaml").unwrap();
+    let project_from_file =
+        std::fs::read_to_string("src/tests/models/project/project.yaml").unwrap();
 
     let from_file = Project::from_yaml(&project_from_file);
 

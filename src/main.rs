@@ -1,12 +1,9 @@
-use crate::{helpers::config, models::app_config::AppConfigFile};
-use once_cell::sync::Lazy;
+// use crate::models::app_config::AppConfigFile;
+// use once_cell::sync::Lazy;
 
-/// This is the main file for the program
-mod controller;
-mod helpers;
 mod models;
 
-pub static CONFIG: Lazy<AppConfigFile> = Lazy::new(config::app_config::get_config);
+//pub static CONFIG: Lazy<AppConfigFile> = Lazy::new();
 
 /// ## main()
 /// This function is the entry point for the program

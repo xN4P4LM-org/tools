@@ -156,7 +156,7 @@ github_token: gh_token # if you want to use github api instead of the GitHub CLI
     let config = AppConfigFile::from_yaml(config_yaml).unwrap();
 
     let config_from_file =
-        std::fs::read_to_string("src/test/models/app_config/config.yaml").unwrap();
+        std::fs::read_to_string("src/tests/models/app_config/config.yaml").unwrap();
 
     let from_file = AppConfigFile::from_yaml(&config_from_file);
     match from_file {

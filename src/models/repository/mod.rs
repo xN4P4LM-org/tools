@@ -1,4 +1,4 @@
-use std::{error::Error, fs};
+use std::error::Error;
 
 use serde::{Deserialize, Serialize};
 
@@ -146,8 +146,13 @@ fn test_creating_a_repository_from_json_string_with_invalid_json() {
 
 #[test]
 fn test_reading_a_repository_from_a_file() {
-    let repo_from_file =
-        fs::read_to_string("src/test/models/repository/example_api_call.json").unwrap();
+    let current_dir = std::env::current_dir().unwrap();
+
+    let repo_from_file = std::fs::read_to_string(
+        std::path::Path::new(&current_dir)
+            .join("src/tests/models/repository/example_api_call.json"),
+    )
+    .expect("Unable to read the file.");
 
     let repo_from_json = Repository::from_json(&repo_from_file);
 
