@@ -122,3 +122,43 @@ pub fn normalize_prompt(prompt: &str) -> String {
         format!("{}: ", local_prompt)
     }
 }
+
+/// ## ask_user_yes_or_no(prompt: &str) -> bool
+/// This function asks the user a yes or no question and returns true if the user
+/// answers yes and false if the user answers no
+/// This function is case insensitive and normalizes the input to lowercase ASCII
+/// This function will keep asking the user for input until they answer yes or no
+///
+/// ### Arguments
+/// - prompt: &str - The prompt to display to the user
+///
+/// ### Returns
+/// - bool - true if the user answers yes, false if the user answers no
+pub fn ask_user_yes_or_no(prompt: &str) -> bool {
+    // create a new string to store the user input
+    let mut input = String::new();
+
+    // loop until the user answers yes or no
+    loop {
+        // get the user input
+        input = get_user_input(prompt, Some(true));
+
+        // check if the user input is yes or no
+        if input == "yes" || input == "no" {
+            // break out of the loop
+            break;
+        } else {
+            // print an error message
+            println!("Please enter yes or no");
+        }
+    }
+
+    // check if the user input is yes
+    if input == "yes" {
+        // return true
+        true
+    } else {
+        // return false
+        false
+    }
+}
